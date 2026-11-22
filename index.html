@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twin Reading Adventure - Mufarowashe & Mukudzeishe - Level 1 & 2</title>
+<style>
+*{box-sizing:border-box;font-family:'Comic Sans MS',Arial,sans-serif}
+body{margin:0;background:linear-gradient(135deg,#FFD93D,#6BCB77,#4D96FF,#FF6B6B);min-height:100vh;display:flex;justify-content:center;padding:15px}
+.card{background:white;width:100%;max-width:560px;border-radius:25px;padding:22px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+h1{font-size:27px;margin:5px 0;color:#4D96FF} h2{font-size:22px}
+p{font-size:18px;line-height:1.5} .big{font-size:38px}
+button{background:#4D96FF;color:white;border:none;padding:14px 20px;border-radius:15px;font-size:18px;font-weight:bold;cursor:pointer;margin:6px;width:100%}
+button:hover{transform:scale(1.02)} .pink{background:#FF6B6B} .green{background:#6BCB77} .yellow{background:#FFD93D;color:#333} .purple{background:#9B5DE5}
+.choice{background:#FFF3CD;border:3px solid #FFD93D;color:#333}
+.score{background:#E8F5E9;padding:10px;border-radius:15px;font-weight:bold;margin:10px 0}
+.story{background:#FFF8E1;padding:15px;border-radius:15px;text-align:left;border-left:6px solid #FFD93D;font-size:17px;line-height:1.6}
+.hidden{display:none} .stars{font-size:30px}
+.badge{background:#FFE0B2;padding:12px;border-radius:15px;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div id="screen1">
+<div class="big">📚✨🌟</div>
+<h1>Twin Reading Adventure</h1>
+<p><b>Mufarowashe & Mukudzeishe</b><br>Age 9 • Twins • Super Readers</p>
+<p>Who is playing today?</p>
+<button onclick="pickPlayer('Mufarowashe')">👦 Mufarowashe</button>
+<button class="pink" onclick="pickPlayer('Mukudzeishe')">👧 Mukudzeishe</button>
+<button class="green" onclick="pickPlayer('Mufarowashe & Mukudzeishe')">👦👧 Both Twins Together!</button>
+</div>
+
+<div id="screen2" class="hidden">
+<h2 id="welcome">Welcome!</h2>
+<div class="score" id="scoreBoard"></div>
+<p>Choose your mission:</p>
+<button onclick="startGame('words')">🔤 Level 1: Word Hero</button>
+<button class="pink" onclick="startGame('sentences')">📖 Level 1: Sentence Star</button>
+<button class="green" onclick="startGame('story')">🏰 Level 1: Story Adventure</button>
+<button class="purple" onclick="startGame('level2')">🚀 LEVEL 2: Master Reader - Big Stories!</button>
+<button class="yellow" onclick="showScreen(1)">🔄 Change Player</button>
+</div>
+
+<div id="gameScreen" class="hidden">
+<div class="score" id="score2"></div>
+<div id="storyBox" class="story hidden"></div>
+<h2 id="questionTitle"></h2>
+<p id="questionText" style="font-size:21px;font-weight:bold"></p>
+<div id="options"></div>
+<p id="feedback" style="font-weight:bold;min-height:28px"></p>
+<button class="yellow" onclick="nextQuestion()">Next ➡️</button>
+<button onclick="showScreen(2)">🏠 Home</button>
+</div>
+
+<div id="finalScreen" class="hidden">
+<div class="big">🏆🎉</div>
+<h1 id="finalTitle">Amazing!</h1>
+<p id="finalText"></p>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+<div class="badge" id="certBox"></div>
+<button onclick="location.reload()">🔄 Play Again</button>
+</div>
+
+</div>
+<script>
+let player="", stars=0, lives=3, current=0, mode="", questions=[];
+const wordQs=[
+{q:"Mufarowashe sees a big animal. It says ROAR! What is it?", opts:["Lion","Fish","Bird"], ans:0},
+{q:"Mukudzeishe loves to read. What do we read?", opts:["A Stone","A Book","A Shoe"], ans:1},
+{q:"Which word means HAPPY?", opts:["Sad","Joyful","Angry"], ans:1},
+{q:"The twins go to SCHOOL to...", opts:["Sleep","Learn","Swim"], ans:1},
+{q:"Which word rhymes with CAT?", opts:["Hat","Dog","Sun"], ans:0},
+{q:"What is the opposite of BIG?", opts:["Small","Huge","Tall"], ans:0},
+];
+const sentenceQs=[
+{q:"Mufarowashe ___ to school every day.", opts:["go","goes","going"], ans:1},
+{q:"Mukudzeishe ___ a beautiful story.", opts:["read","reads","reading"], ans:1},
+{q:"The twins ___ very clever.", opts:["is","are","am"], ans:1},
+{q:"Choose the correct sentence:", opts:["Mufarowashe like apples.","Mufarowashe likes apples.","Mufarowashe liking apples."], ans:1},
+{q:"Choose the correct sentence:", opts:["Mukudzeishe and Mufarowashe is twins.","Mukudzeishe and Mufarowashe are twins.","Mukudzeishe and Mufarowashe am twins."], ans:1},
+];
+const storyQs=[
+{q:"STORY: Mufarowashe and Mukudzeishe found a magic book. It said, 'Read me and fly!' They opened the book and...", opts:["They flew to a land of stories!","They went to sleep","They ate the book"], ans:0},
+{q:"In the story, who found the magic book?", opts:["Mufarowashe and Mukudzeishe","A lion","The teacher"], ans:0},
+{q:"What did the magic book say?", opts:["Read me and fly!","Go away!","Eat me!"], ans:0},
+];
+// LEVEL 2 - READING COMPREHENSION
+const level2Qs=[
+{story:"STORY 1: The Lost Puppy<br><br>Mufarowashe and Mukudzeishe were walking home from school when they heard a soft crying sound. Behind a big tree, they found a small brown puppy. The puppy was cold, hungry and scared. Mukudzeishe took off her jacket and wrapped the puppy gently. Mufarowashe ran home to get milk and bread. They fed the puppy and took it home. Mummy said, 'You are kind children. We will help find its owner.'", q:"Where did the twins find the puppy?", opts:["Behind a big tree","In the classroom","At the shop"], ans:0},
+{story:"STORY 1: The Lost Puppy<br><br>Mufarowashe and Mukudzeishe were walking home from school when they heard a soft crying sound. Behind a big tree, they found a small brown puppy. The puppy was cold, hungry and scared. Mukudzeishe took off her jacket and wrapped the puppy gently. Mufarowashe ran home to get milk and bread.", q:"Why did Mukudzeishe take off her jacket?", opts:["To keep the puppy warm","Because she was hot","To play with it"], ans:0},
+{story:"STORY 1: The Lost Puppy<br><br>The puppy was cold, hungry and scared.", q:"What does the word 'scared' mean?", opts:["Happy","Afraid","Sleepy"], ans:1},
+{story:"STORY 1: The Lost Puppy", q:"What does this story teach us?", opts:["To be kind to animals","To run away from dogs","To never help"], ans:0},
+{story:"STORY 2: The School Competition<br><br>At school, there was a big reading competition. Mufarowashe was nervous. Mukudzeishe said, 'You can do it! We practiced together.' Mufarowashe stood up, took a deep breath, and read his story clearly. Everyone clapped. He did not win first place, but his teacher said, 'I am proud of you. You were brave.' Mufarowashe smiled. He felt like a winner.", q:"Why was Mufarowashe nervous?", opts:["Because of the reading competition","Because he lost his bag","Because it was raining"], ans:0},
+{story:"STORY 2: The School Competition<br><br>Mukudzeishe said, 'You can do it! We practiced together.'", q:"What did Mukudzeishe do?", opts:["She encouraged her brother","She laughed at him","She walked away"], ans:0},
+{story:"STORY 2: The School Competition", q:"Did Mufarowashe win first place?", opts:["Yes","No, but he was brave","He did not read"], ans:1},
+{story:"STORY 2: The School Competition", q:"What does 'brave' mean in this story?", opts:["Doing something even when you are scared","Running fast","Being loud"], ans:0},
+{story:"STORY 3: The Magic Garden<br><br>One Saturday, Mufarowashe and Mukudzeishe planted seeds in their garden. Every day they watered them. After two weeks, small green plants came out. Mukudzeishe shouted, 'Look! Our garden is growing!' Soon they had tomatoes, carrots and spinach. They picked vegetables and gave some to their neighbours. Their garden was not magic. It was hard work, patience and love.", q:"What did the twins plant?", opts:["Seeds","Toys","Stones"], ans:0},
+{story:"STORY 3: The Magic Garden<br><br>Every day they watered them. After two weeks, small green plants came out.", q:"How long did it take for plants to come out?", opts:["Two weeks","Two years","Two minutes"], ans:0},
+{story:"STORY 3: The Magic Garden", q:"Why was the garden NOT magic?", opts:["Because it grew from hard work and patience","Because it was fake","Because it rained"], ans:0},
+{story:"STORY 3: The Magic Garden", q:"What did they do with the vegetables?", opts:["Gave some to neighbours","Threw them away","Hid them"], ans:0},
+{story:"VOCABULARY CHALLENGE", q:"Mufarowashe is 'curious'. What does curious mean?", opts:["Wants to learn and ask questions","Wants to sleep","Wants to eat"], ans:0},
+{story:"VOCABULARY CHALLENGE", q:"Mukudzeishe is 'generous'. What does generous mean?", opts:["Loves to share with others","Loves to shout","Loves to hide"], ans:0},
+{story:"VOCABULARY CHALLENGE", q:"Choose the best ending: Mufarowashe and Mukudzeishe love reading because...", opts:["Reading takes them to new worlds","Reading is boring","Reading makes them sleepy"], ans:0},
+];
+function showScreen(n){ document.querySelectorAll('#screen1,#screen2,#gameScreen,#finalScreen').forEach(e=>e.classList.add('hidden')); document.getElementById('screen'+n).classList.remove('hidden'); }
+function pickPlayer(name){ player=name; document.getElementById('welcome').innerText="Welcome, "+name+"! 🎉"; stars=0; lives=3; updateScore(); showScreen(2); }
+function updateScore(){ document.getElementById('scoreBoard').innerText=⭐ Stars: ${stars} | ❤️ Lives: ${lives} | Player: ${player}; document.getElementById('score2').innerText=⭐ Stars: ${stars} | ❤️ Lives: ${lives} | Player: ${player}; }
+function startGame(m){ mode=m; current=0; if(m==='words') questions=wordQs; if(m==='sentences') questions=sentenceQs; if(m==='story') questions=storyQs; if(m==='level2') questions=level2Qs; showScreen(3); showQuestion(); }
+function showQuestion(){
+if(current>=questions.length){ finish(); return; }
+let q=questions[current];
+document.getElementById('questionTitle').innerText=Question ${current+1} of ${questions.length} ${mode==='level2' ? '• LEVEL 2' : ''}; document.getElementById('questionText').innerText=q.q; document.getElementById('feedback').innerText=""; let sb=document.getElementById('storyBox'); if(q.story){ sb.innerHTML=q.story; sb.classList.remove('hidden'); } else { sb.classList.add('hidden'); } let html=""; q.opts.forEach((opt,i)=&gt;{ html+=<button class="choice" onclick="check(${i})"&gt;${opt}</button>; }); document.getElementById('options').innerHTML=html; updateScore(); } function check(i){ let q=questions[current]; if(i===q.ans){ stars+=10; document.getElementById('feedback').innerText=✅ Correct! Well done ${player}! +10 Stars; document.getElementById('feedback').style.color="green"; }
+else { lives--; document.getElementById('feedback').innerText=❌ Not quite, ${player}. You can do it!; document.getElementById('feedback').style.color="red"; if(lives&lt;=0){ finish(); return; } } updateScore(); } function nextQuestion(){ current++; showQuestion(); } function finish(){ showScreen(4); let isMaster = mode==='level2' && stars&gt;=100; document.getElementById('finalTitle').innerText = isMaster ? "MASTER READER! 🏆" : "Amazing!"; document.getElementById('finalText').innerText = ``${player}, you scored ${stars} stars! Mummy and Daddy are so proud of you!; document.getElementById('certBox').innerHTML =🏅 CERTIFICATE<br>${isMaster ? 'MASTER READER - LEVEL 2' : 'SUPER READER'}&lt;br&gt;Presented to ${player}&lt;br&gt;For Excellent Reading!;
+}
+</script>
+</body>
+</html>
