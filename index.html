@@ -1,15 +1,18 @@
-📚✨🌟
-Twin Reading Adventure
-Mufarowashe & Mukudzeishe
-Age 9 • Twins • Super Readers
-Who is playing today?
-👦 Mufarowashe👧 Mukudzeishe👦👧 Both Twins Together!
-Welcome!
-Choose your mission:
-🔤 Level 1: Word Hero📖 Level 1: Sentence Star🏰 Level 1: Story Adventure🚀 LEVEL 2: Master Reader🔄 Change Player
-Next ➡️🏠 Home
-🏆🎉
-Amazing!
-⭐⭐⭐⭐⭐
-
-🔄 Play Again
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Twin Reading Adventure</title><style>body{margin:0;background:#FFD93D;font-family:Arial;display:flex;justify-content:center;padding:12px} .c{background:#fff;max-width:520px;width:100%;border-radius:20px;padding:20px;text-align:center} button{background:#4D96FF;color:#fff;border:0;padding:14px;border-radius:12px;font-size:18px;font-weight:bold;margin:6px 0;width:100%} .p{background:#FF6B6B} .g{background:#6BCB77} .y{background:#FFD93D;color:#333} .u{background:#9B5DE5} .o{background:#FFF3CD;border:3px solid #FFD93D;color:#333} .s{background:#E8F5E9;padding:10px;border-radius:12px;font-weight:bold} .st{background:#FFF8E1;padding:12px;border-radius:12px;text-align:left;border-left:6px solid #FFD93D} .h{display:none} p{font-size:18px;line-height:1.5}</style></head><body><div class="c">
+<div id="a"><h1>📚 Twin Reading Adventure</h1><p><b>Mufarowashe & Mukudzeishe</b><br>Age 9 • Twins</p><p>Who is playing?</p><button onclick="pick('Mufarowashe')">👦 Mufarowashe</button><button class="p" onclick="pick('Mukudzeishe')">👧 Mukudzeishe</button><button class="g" onclick="pick('Mufarowashe & Mukudzeishe')">👦👧 Both Twins</button></div>
+<div id="b" class="h"><h2 id="w"></h2><div class="s" id="s1"></div><p>Choose mission:</p><button onclick="go('L1')">🔤 Level 1: Words & Sentences</button><button class="u" onclick="go('L2')">🚀 Level 2: Big Stories</button><button class="y" onclick="show('a')">Change Player</button></div>
+<div id="c2" class="h"><div class="s" id="s2"></div><div id="sb" class="st h"></div><h2 id="qt"></h2><p id="q"></p><div id="op"></div><p id="f"></p><button class="y" onclick="nxt()">Next ➡️</button><button onclick="show('b')">🏠 Home</button></div>
+<div id="d" class="h"><h1>🏆 Amazing!</h1><p id="ft"></p><p>⭐⭐⭐⭐⭐</p><p id="cert"></p><button onclick="location.reload()">Play Again</button></div>
+</div><script>
+let P="",S=0,L=3,C=0,Q=[];
+let L1=[{q:"Mufarowashe sees an animal. It says ROAR! What is it?",o:["Lion","Fish","Bird"],a:0},{q:"Mukudzeishe loves to read. What do we read?",o:["A Stone","A Book","A Shoe"],a:1},{q:"Which word means HAPPY?",o:["Sad","Joyful","Angry"],a:1},{q:"The twins go to SCHOOL to...",o:["Sleep","Learn","Swim"],a:1},{q:"Mufarowashe ___ to school every day.",o:["go","goes","going"],a:1},{q:"The twins ___ very clever.",o:["is","are","am"],a:1}];
+let L2=[{s:"STORY: The Lost Puppy - Mufarowashe and Mukudzeishe were walking home. Behind a big tree, they found a small brown puppy. It was cold, hungry and scared. Mukudzeishe wrapped it in her jacket. Mufarowashe got milk and bread.",q:"Where did they find the puppy?",o:["Behind a big tree","In class","At the shop"],a:0},{s:"STORY: The Lost Puppy",q:"Why did Mukudzeishe take off her jacket?",o:["To keep puppy warm","She was hot","To play"],a:0},{s:"STORY: The Lost Puppy - The puppy was cold, hungry and scared.",q:"What does SCARED mean?",o:["Happy","Afraid","Sleepy"],a:1},{s:"STORY: School Competition - Mufarowashe was nervous for the reading competition. Mukudzeishe said, You can do it! He read clearly. Everyone clapped. He did not win first place, but teacher said, You were brave.",q:"What did Mukudzeishe do?",o:["Encouraged her brother","Laughed at him","Walked away"],a:0},{s:"STORY: School Competition",q:"What does BRAVE mean?",o:["Doing it even when scared","Running fast","Being loud"],a:0},{s:"STORY: Magic Garden - The twins planted seeds. Every day they watered them. After 2 weeks, plants came out. Soon they had tomatoes and carrots. They gave some to neighbours.",q:"How long for plants to come out?",o:["2 weeks","2 years","2 minutes"],a:0},{s:"STORY: Magic Garden",q:"Why was garden NOT magic?",o:["It grew from hard work","It was fake","It rained"],a:0},{s:"VOCABULARY",q:"Mufarowashe is CURIOUS. What does it mean?",o:["Wants to learn","Wants to sleep","Wants to eat"],a:0}];
+function show(id){["a","b","c2","d"].forEach(x=>document.getElementById(x).classList.add("h"));document.getElementById(id).classList.remove("h")}
+function pick(n){P=n;S=0;L=3;document.getElementById("w").innerText="Welcome, "+n+"!";upd();show("b")}
+function upd(){document.getElementById("s1").innerText="⭐ "+S+" | ❤️ "+L+" | "+P;document.getElementById("s2").innerText="⭐ "+S+" | ❤️ "+L+" | "+P}
+function go(m){C=0;Q=(m=="L1"?L1:L2);show("c2");sq()}
+function sq(){if(C>=Q.length){fin();return}let q=Q[C];document.getElementById("qt").innerText="Question "+(C+1)+" of "+Q.length;document.getElementById("q").innerText=q.q;document.getElementById("f").innerText="";let b=document.getElementById("sb");if(q.s){b.innerHTML=q.s;b.classList.remove("h")}else{b.classList.add("h")}let h="";q.o.forEach((o,i)=>{h+='<button class="o" onclick="chk('+i+')">'+o+'</button>'});document.getElementById("op").innerHTML=h;upd()}
+function chk(i){let q=Q[C];if(i==q.a){S+=10;document.getElementById("f").innerText="✅ Correct! Well done "+P+"! +10 Stars"}else{L--;document.getElementById("f").innerText="❌ Not quite "+P+", you can do it!";if(L<=0){fin();return}}upd()}
+function nxt(){C++;sq()}
+function fin(){show("d");document.getElementById("ft").innerText=P+", you scored "+S+" stars! Mummy and Daddy are so proud!";document.getElementById("cert").innerText="🏅 CERTIFICATE - SUPER READER - Presented to "+P}
+</script></body></html>
